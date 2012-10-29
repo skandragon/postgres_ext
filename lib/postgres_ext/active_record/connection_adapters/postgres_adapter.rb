@@ -316,7 +316,7 @@ module ActiveRecord
         if value.nil?
           'NULL'
         elsif value.is_a?String
-          "'#{value}'"
+          quote_without_extended_types(value, column)
         else
           type_cast(value, column, true)
         end
