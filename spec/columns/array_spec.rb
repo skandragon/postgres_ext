@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'spec_helper'
 
 describe 'Array column' do
@@ -10,6 +12,12 @@ describe 'Array column' do
       context 'has null value' do
         it 'converts the PostgreSQL value to an array with a nil value' do
           string_array_column.type_cast('{1,NULL,"NULL"}').should eq ['1',nil,'NULL']
+        end
+      end
+      
+      context 'utf8' do
+        it "handles incoming UTF8 as UTF8" do
+          string_array_column.type_cast('{"Аркалио"}').should eq ['Аркалио']
         end
       end
 
