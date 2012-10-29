@@ -42,7 +42,7 @@ module ActiveRecord
         else
           case type
           when :inet, :cidr   then klass.string_to_cidr_address(value)
-          else 
+          else
             type_cast_without_extended_types(value)
           end
         end
@@ -229,7 +229,7 @@ module ActiveRecord
           end
         when Array
           if column.array
-            array_to_string(value, column) 
+            array_to_string(value, column)
           else
             type_cast_without_extended_types(value, column)
           end
@@ -309,9 +309,9 @@ module ActiveRecord
         return '{}' if value.count == 0
         "ARRAY[#{value.map { |val| item_to_string(val, column) }.join(',')}]"
       end
-      
+
       private
-      
+
       def item_to_string(value, column)
         if value.nil?
           'NULL'
