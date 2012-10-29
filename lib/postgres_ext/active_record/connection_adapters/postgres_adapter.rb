@@ -242,8 +242,11 @@ module ActiveRecord
       alias_method_chain :type_cast, :extended_types
 
       def quote_with_extended_types(value, column = nil)
-        if [Array, IPAddr].include? value.class
+        case value
+        when IPAddr
           "'#{type_cast(value, column)}'"
+        when Array
+          array_to_string(value, column)
         else
           quote_without_extended_types(value, column)
         end
@@ -303,7 +306,8 @@ module ActiveRecord
       end
 
       def array_to_string(value, column)
-        "{#{value.map { |val| item_to_string(val, column) }.join(',')}}"
+        return '{}' if value.count == 0
+        "ARRAY[#{value.map { |val| item_to_string(val, column) }.join(',')}]"
       end
       
       private
@@ -312,7 +316,7 @@ module ActiveRecord
         if value.nil?
           'NULL'
         elsif value.is_a?String
-          '"' + type_cast(value, column, true).gsub('"', '\\"') + '"'
+          "'#{value}'"
         else
           type_cast(value, column, true)
         end

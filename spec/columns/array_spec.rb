@@ -23,15 +23,15 @@ describe 'Array column' do
         end
 
         it 'converts strings containing , to the proper value' do
-          adapter.type_cast(['c,'], string_array_column).should eq '{"c,"}'
+          adapter.type_cast(['c,'], string_array_column).should eq "ARRAY['c,']"
         end
         
         it "handles strings with double quotes" do
-          adapter.type_cast(['a"b'], string_array_column).should eq '{"a\\"b"}'
+          adapter.type_cast(['a"b'], string_array_column).should eq "ARRAY['a\"b']"
         end
 
         it 'converts arrays of strings containing nil to the proper value' do
-          adapter.type_cast(['one', nil, 'two'], string_array_column).should eq '{"one",NULL,"two"}'
+          adapter.type_cast(['one', nil, 'two'], string_array_column).should eq "ARRAY['one',NULL,'two']"
         end
       end
     end
@@ -55,13 +55,13 @@ describe 'Array column' do
       context 'contains a nil value' do
         it 'returns a PostgreSQL array' do
           value = integer_array_column.type_cast('{1,NULL,2}')
-          adapter.type_cast(value, integer_array_column).should eq '{1,NULL,2}'
+          adapter.type_cast(value, integer_array_column).should eq 'ARRAY[1,NULL,2]'
         end
       end
       context 'one dimensional array' do
         it 'returns a PostgreSQL array' do
           value = integer_array_column.type_cast('{1,2,3,4}')
-          adapter.type_cast(value, integer_array_column).should eq '{1,2,3,4}'
+          adapter.type_cast(value, integer_array_column).should eq 'ARRAY[1,2,3,4]'
         end
       end
     end
